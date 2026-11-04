@@ -24,6 +24,11 @@ jq --indent 2 --arg s "$SETUP" --arg h "$HOOK" '
       .hooks.PreToolUse = ((.hooks.PreToolUse // []) + [{matcher: "Bash", hooks: [{type: "command", command: $h}]}]) end
 ' "$SET" > "$tmp" && mv "$tmp" "$SET"
 
+if [ ! -f CLAUDE.md ]; then
+  cp "$HERE/template/CLAUDE.md" CLAUDE.md
+  echo "CLAUDE.md créé depuis le modèle : à compléter (NOM_DU_PROJET, commandes, secrets)"
+fi
+
 LINE='- rtk actif (hook) : sortie Bash compressée auto. Sortie brute : `rtk bypass <cmd>`. Read/Grep/Glob non concernés.'
 if [ -f CLAUDE.md ] && ! grep -q 'rtk actif' CLAUDE.md; then
   printf '\n%s\n' "$LINE" >> CLAUDE.md
